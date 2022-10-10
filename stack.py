@@ -89,4 +89,31 @@ def is_matched_html(raw):
             if tag[1:] != S.pop():
                 return False # mismatched delimiter
         j = raw.find('<', k+1) # find next ’<’ character (if any)
-    return S.is_empty( ) # were all opening tags matched?
+    return S.is_empty() # were all opening tags matched?
+
+html = "<body><center><h1></h1></center><p></p><ol><li></li><li></li><li></li></ol></body>"
+print(is_matched_html(html))
+
+"""
+Each opening symbol must match its corresponding closing symbol. For example, a
+left bracket, “[,” must match a corresponding right bracket, “],” as in the expression
+[(5+x)-(y+z)]
+"""
+
+def is_matched(expr):
+    """Return True if all delimiters are properly match; False otherwise."""
+    lefty = '({[' # opening delimiters
+    righty = ')}]' # respective closing delims
+    S = ArrayStack()
+    for c in expr:
+        if c in lefty:
+            S.push(c) # push left delimiter on stack
+        elif c in righty:
+            if S.is_empty( ):
+                return False # nothing to match with
+            if righty.index(c) != lefty.index(S.pop()):
+                return False # mismatched
+    return S.is_empty()
+
+expression = '[(5+x)-(y+z)]'
+print(is_matched(expression))
