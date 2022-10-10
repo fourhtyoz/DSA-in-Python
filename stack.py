@@ -58,3 +58,35 @@ S.top() - O(1)
 S.is empty() - O(1)
 len(S) - O(1)
 """
+
+# Put in practice
+
+"""
+An HTML document should have matching tags. We give a
+Python function that matches tags in a string representing an HTML document. We
+make a left-to-right pass through the raw string, using index j to track our progress
+and the find method of the str class to locate the < and > characters that define
+the tags. Opening tags are pushed onto the stack, and matched against closing tags
+as they are popped from the stack, just as we did when matching delimiters in Code
+Fragment 6.4. By similar analysis, this algorithm runs in O(n) time, where n is the
+number of characters in the raw HTML source.
+"""
+
+def is_matched_html(raw):
+    """Return True if all HTML tags are properly match; False otherwise."""
+    S = ArrayStack()
+    j = raw.find('<') # find first ’<’ character (if any)
+    while j != -1:
+        k = raw.find('>', j+1) # find next ’>’ character
+        if k == -1:
+            return False # invalid tag
+        tag = raw[j+1:k] # strip away < >
+        if not tag.startswith('/'): # this is opening tag
+            S.push(tag)
+        else: # this is closing tag
+            if S.is_empty():
+                return False # nothing to match with
+            if tag[1:] != S.pop():
+                return False # mismatched delimiter
+        j = raw.find('<', k+1) # find next ’<’ character (if any)
+    return S.is_empty( ) # were all opening tags matched?
